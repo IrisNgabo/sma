@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 4000;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'http://localhost:3001',
   credentials: true
 }));
 
@@ -60,25 +60,18 @@ const swaggerOptions = {
 const specs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Database connection
-const sequelize = new Sequelize(process.env.DATABASE_URL || {
-  database: process.env.DB_NAME || 'credit_jambo_admin',
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  dialect: 'postgres',
-  logging: process.env.NODE_ENV === 'development' ? console.log : false,
-});
+// Import models (includes sequelize instance)
+const db = require('./src/models');
+const { sequelize, User, Transaction, Admin } = db;
 
 // Test database connection and sync models
 sequelize.authenticate()
   .then(async () => {
     console.log('✅ Connected to PostgreSQL');
     
-    // Sync database models
-    await sequelize.sync({ alter: true });
-    console.log('✅ Database models synchronized');
+    // Sync database models without dropping data
+    await sequelize.sync();
+    console.log('✅ Database models synchronized (no destructive changes)');
     
     // Seed initial admin user
     const seedAdmin = require('./src/utils/seedAdmin');
@@ -110,7 +103,7 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: 'Route not found'
