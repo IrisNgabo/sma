@@ -52,6 +52,12 @@ router.get('/devices/stats',
 );
 
 // Customer management routes
+router.get('/customers/stats', 
+  authenticateAdmin, 
+  requirePermission('canViewUsers'), 
+  customerController.getCustomerStats
+);
+
 router.get('/customers', 
   authenticateAdmin, 
   requirePermission('canViewUsers'), 
@@ -74,12 +80,6 @@ router.get('/customers/:userId/balance',
   authenticateAdmin, 
   requirePermission('canViewUsers'), 
   customerController.getCustomerBalance
-);
-
-router.get('/customers/stats', 
-  authenticateAdmin, 
-  requirePermission('canViewUsers'), 
-  customerController.getCustomerStats
 );
 
 // Analytics routes
