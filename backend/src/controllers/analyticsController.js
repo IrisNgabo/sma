@@ -366,12 +366,14 @@ const getCustomerAnalytics = async (req, res) => {
       User.findAll({
         attributes: [
           [require('sequelize').fn('COUNT', require('sequelize').col('id')), 'count'],
-          [require('sequelize').fn('CASE',
-            require('sequelize').fn('WHEN', require('sequelize').col('balance'), '>', 1000, 1)
-            .when(require('sequelize').col('balance'), '>', 500, 2)
-            .when(require('sequelize').col('balance'), '>', 100, 3)
-            .else(4), 'balanceRange'
-          )
+          [require('sequelize').literal(`
+            CASE 
+              WHEN balance > 1000 THEN 1
+              WHEN balance > 500 THEN 2
+              WHEN balance > 100 THEN 3
+              ELSE 4
+            END
+          `), 'balanceRange']
         ],
         where: { isActive: true },
         group: ['balanceRange'],
