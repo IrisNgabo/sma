@@ -18,36 +18,36 @@ credit-jambo-admin/
 
 ## ✨ Features
 
-### 🔐 Admin Authentication
+###  Admin Authentication
 - Secure JWT-based authentication
 - Role-based access control
 - Session management
 
-### 📱 Device Verification
+###  Device Verification
 - Review unverified customer devices
 - Individual and batch device verification
 - Device statistics and monitoring
 
-### 👥 Customer Management
+###  Customer Management
 - Complete customer database
 - Search and filter capabilities
 - Customer transaction history
 - Balance monitoring
 
-### 📊 Analytics Dashboard
+###  Analytics Dashboard
 - Real-time platform metrics
 - Transaction trends and insights
 - Customer distribution analysis
 - Performance monitoring
 
-### 🛡️ Security Features
+###  Security Features
 - Helmet security headers
 - Rate limiting protection
 - Input validation and sanitization
 - CORS configuration
 - SQL injection prevention
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Runtime**: Node.js
@@ -67,7 +67,7 @@ credit-jambo-admin/
 - **Notifications**: React Toastify
 - **HTTP Client**: Axios
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -99,9 +99,9 @@ npm start
 ```
 
 ### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:4000
-- **API Documentation**: http://localhost:4000/api-docs
+- **Frontend**: http://localhost:3001
+- **Backend API**: http://localhost:4001
+- **API Documentation**: http://localhost:4001/api-docs
 
 ### 5. Default Admin Credentials
 - **Email**: admin@creditjambo.com
@@ -169,7 +169,7 @@ npm start
 ### Backend Environment Variables
 ```env
 # Server Configuration
-PORT=4000
+PORT=4001
 NODE_ENV=development
 
 # Database
@@ -184,12 +184,12 @@ ADMIN_EMAIL=admin@creditjambo.com
 ADMIN_PASSWORD=admin123
 
 # Frontend URL
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3001
 ```
 
 ### Frontend Environment Variables
 ```env
-REACT_APP_API_URL=http://localhost:4000/api
+REACT_APP_API_URL=http://localhost:4001/api
 REACT_APP_ENV=development
 ```
 

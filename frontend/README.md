@@ -49,7 +49,7 @@ React-based admin dashboard for the Credit Jambo Management System.
    
    Update the `.env` file:
    ```env
-   REACT_APP_API_URL=http://localhost:4000/api
+   REACT_APP_API_URL=http://localhost:4001/api
    REACT_APP_ENV=development
    ```
 
@@ -58,7 +58,7 @@ React-based admin dashboard for the Credit Jambo Management System.
    npm start
    ```
 
-The application will open at http://localhost:3000
+The application will open at http://localhost:3001
 
 ## Available Scripts
 

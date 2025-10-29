@@ -50,7 +50,7 @@ Backend API for the Credit Jambo Admin Management System built with Node.js, Exp
    Update the `.env` file with your configuration:
    ```env
    # Server Configuration
-   PORT=4000
+   PORT=4001
    NODE_ENV=development
 
    # PostgreSQL Database Configuration
@@ -70,7 +70,7 @@ Backend API for the Credit Jambo Admin Management System built with Node.js, Exp
    ADMIN_PASSWORD=admin123
 
    # Frontend URL
-   FRONTEND_URL=http://localhost:3000
+   FRONTEND_URL=http://localhost:3001
    ```
 
 4. **Set up PostgreSQL database**
@@ -95,8 +95,8 @@ Backend API for the Credit Jambo Admin Management System built with Node.js, Exp
 ## API Documentation
 
 Once the server is running, visit:
-- **API Documentation**: http://localhost:4000/api-docs
-- **Health Check**: http://localhost:4000/
+- **API Documentation**: http://localhost:4001/api-docs
+- **Health Check**: http://localhost:4001/
 
 ## API Endpoints
 
