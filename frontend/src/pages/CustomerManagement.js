@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FiUsers, FiSearch, FiFilter, FiEye, FiDollarSign, FiShield, FiShieldOff } from 'react-icons/fi';
+import { FiUsers, FiSearch, FiFilter, FiEye, FiDollarSign, FiShield, FiShieldOff, FiX } from 'react-icons/fi';
 import { customerAPI } from '../services/api';
+import { formatCurrency } from '../utils/format';
 
 const CustomerManagement = () => {
   const [customers, setCustomers] = useState([]);
@@ -61,9 +62,20 @@ const CustomerManagement = () => {
     }
   };
 
+  // Debounced search effect
+  useEffect(() => {
+    const t = setTimeout(() => {
+      fetchCustomers();
+    }, 300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  // Immediate fetch when filter changes
   useEffect(() => {
     fetchCustomers();
-  }, [searchTerm, filterVerified]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterVerified]);
 
   if (loading) {
     return (
@@ -84,39 +96,39 @@ const CustomerManagement = () => {
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow">
+          <div className="bg-white p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
             <div className="flex items-center">
-              <FiUsers className="h-8 w-8 text-blue-600" />
+              <FiUsers className="h-8 w-8 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Total Customers</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
+          <div className="bg-white p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
             <div className="flex items-center">
-              <FiShield className="h-8 w-8 text-green-600" />
+              <FiShield className="h-8 w-8 text-green-600 group-hover:scale-110 transition-transform duration-300" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Verified</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.verifiedCustomers}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
+          <div className="bg-white p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
             <div className="flex items-center">
-              <FiShieldOff className="h-8 w-8 text-yellow-600" />
+              <FiShieldOff className="h-8 w-8 text-yellow-600 group-hover:scale-110 transition-transform duration-300" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Unverified</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.unverifiedCustomers}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
+          <div className="bg-white p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
             <div className="flex items-center">
-              <FiDollarSign className="h-8 w-8 text-purple-600" />
+              <FiDollarSign className="h-8 w-8 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-500">Total Balance</p>
-                <p className="text-2xl font-bold text-gray-900">${stats.totalBalance?.toLocaleString() || '0'}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(stats.totalBalance)}</p>
               </div>
             </div>
           </div>
@@ -124,7 +136,7 @@ const CustomerManagement = () => {
       )}
 
       {/* Search and Filter */}
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
         <div className="flex flex-col sm:flex-row gap-4">
           <form onSubmit={handleSearch} className="flex-1">
             <div className="relative">
@@ -156,7 +168,7 @@ const CustomerManagement = () => {
       </div>
 
       {/* Customers Table */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
             Customers ({customers.length})
@@ -191,7 +203,7 @@ const CustomerManagement = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {customers.map((customer) => (
-                    <tr key={customer.id} className="hover:bg-gray-50">
+                    <tr key={customer.id} className="hover:bg-blue-50 hover:shadow-md transition-all duration-200 cursor-pointer">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
@@ -220,9 +232,7 @@ const CustomerManagement = () => {
                           {customer.isVerified ? 'Verified' : 'Unverified'}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${customer.balance?.toLocaleString() || '0.00'}
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{formatCurrency(customer.balance)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {customer.lastLogin
                           ? new Date(customer.lastLogin).toLocaleDateString()
