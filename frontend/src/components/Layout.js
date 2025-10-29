@@ -5,15 +5,18 @@ import {
   FiHome,
   FiUsers,
   FiShield,
-  FiBarChart3,
+  FiBarChart,
   FiLogOut,
   FiMenu,
   FiX,
-  FiUser
+  FiUser,
+  FiChevronLeft,
+  FiChevronRight
 } from 'react-icons/fi';
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { admin, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -22,7 +25,7 @@ const Layout = () => {
     { name: 'Dashboard', href: '/dashboard', icon: FiHome },
     { name: 'Device Verification', href: '/devices', icon: FiShield },
     { name: 'Customer Management', href: '/customers', icon: FiUsers },
-    { name: 'Analytics', href: '/analytics', icon: FiBarChart3 },
+    { name: 'Analytics', href: '/analytics', icon: FiBarChart },
   ];
 
   const handleLogout = async () => {
@@ -37,30 +40,54 @@ const Layout = () => {
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${
+      <div className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transform ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+      } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        sidebarCollapsed ? 'w-20' : 'w-64'
+      } transition-all duration-300 ease-in-out`}>
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
+          {!sidebarCollapsed && (
+            <div className="flex items-center min-w-0">
+              <div className="flex-shrink-0">
+                <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <FiShield className="h-5 w-5 text-white" />
+                </div>
+              </div>
+              <div className="ml-3 min-w-0">
+                <h1 className="text-lg font-semibold text-gray-900 truncate">Credit Jambo</h1>
+                <p className="text-sm text-gray-500 truncate">Admin Panel</p>
+              </div>
+            </div>
+          )}
+          {sidebarCollapsed && (
+            <div className="flex items-center justify-center w-full">
               <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <FiShield className="h-5 w-5 text-white" />
               </div>
             </div>
-            <div className="ml-3">
-              <h1 className="text-lg font-semibold text-gray-900">Credit Jambo</h1>
-              <p className="text-sm text-gray-500">Admin Panel</p>
-            </div>
+          )}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-colors"
+              title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {sidebarCollapsed ? (
+                <FiChevronRight className="h-5 w-5" />
+              ) : (
+                <FiChevronLeft className="h-5 w-5" />
+              )}
+            </button>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+            >
+              <FiX className="h-6 w-6" />
+            </button>
           </div>
-          <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-          >
-            <FiX className="h-6 w-6" />
-          </button>
         </div>
 
-        <nav className="mt-5 px-2">
+        <nav className="mt-5 px-2 pb-24">
           <div className="space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon;
@@ -73,20 +100,27 @@ const Layout = () => {
                     navigate(item.href);
                     setSidebarOpen(false);
                   }}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                  className={`group flex items-center ${
+                    sidebarCollapsed ? 'justify-center px-2' : 'px-2'
+                  } py-3 text-sm font-medium rounded-lg transition-all ${
                     isCurrentPath(item.href)
                       ? 'bg-blue-100 text-blue-900'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
+                  title={sidebarCollapsed ? item.name : ''}
                 >
                   <Icon
-                    className={`mr-3 h-5 w-5 ${
+                    className={`h-6 w-6 ${
+                      sidebarCollapsed ? '' : 'mr-3'
+                    } ${
                       isCurrentPath(item.href)
-                        ? 'text-blue-500'
-                        : 'text-gray-400 group-hover:text-gray-500'
+                        ? 'text-blue-600'
+                        : 'text-gray-400 group-hover:text-gray-600'
                     }`}
                   />
-                  {item.name}
+                  {!sidebarCollapsed && (
+                    <span className="truncate">{item.name}</span>
+                  )}
                 </a>
               );
             })}
@@ -94,27 +128,41 @@ const Layout = () => {
         </nav>
 
         {/* User info */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="h-8 w-8 bg-gray-300 rounded-full flex items-center justify-center">
-                <FiUser className="h-4 w-4 text-gray-600" />
+        <div className={`absolute bottom-0 left-0 right-0 border-t border-gray-200 ${
+          sidebarCollapsed ? 'p-2' : 'p-4'
+        }`}>
+          {sidebarCollapsed ? (
+            <div className="flex flex-col items-center space-y-2">
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-all"
+                title="Logout"
+              >
+                <FiLogOut className="h-5 w-5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
+                  <FiUser className="h-5 w-5 text-white" />
+                </div>
               </div>
+              <div className="ml-3 flex-1 min-w-0">
+                <p className="text-sm font-semibold text-gray-900 truncate">
+                  {admin?.name || 'Admin'}
+                </p>
+                <p className="text-xs text-gray-500 truncate">{admin?.role || 'Administrator'}</p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="ml-2 p-2 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-all"
+                title="Logout"
+              >
+                <FiLogOut className="h-5 w-5" />
+              </button>
             </div>
-            <div className="ml-3 flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                {admin?.name || 'Admin'}
-              </p>
-              <p className="text-xs text-gray-500">{admin?.role || 'Administrator'}</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="ml-2 p-1 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-              title="Logout"
-            >
-              <FiLogOut className="h-4 w-4" />
-            </button>
-          </div>
+          )}
         </div>
       </div>
 
@@ -129,24 +177,30 @@ const Layout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
+        <header className="bg-white shadow-sm border-b border-gray-200 z-40">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-            >
-              <FiMenu className="h-6 w-6" />
-            </button>
-            
-            <div className="flex items-center">
-              <h2 className="text-xl font-semibold text-gray-900">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
+              >
+                <FiMenu className="h-6 w-6" />
+              </button>
+              
+              <h2 className="text-xl font-bold text-gray-900">
                 {navigation.find(item => isCurrentPath(item.href))?.name || 'Dashboard'}
               </h2>
             </div>
 
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
-                Welcome back, {admin?.name || 'Admin'}
+              <div className="hidden sm:flex items-center space-x-3 bg-gray-50 px-4 py-2 rounded-lg">
+                <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                  <FiUser className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{admin?.name || 'Admin'}</p>
+                  <p className="text-xs text-gray-500">{admin?.role || 'Administrator'}</p>
+                </div>
               </div>
             </div>
           </div>
