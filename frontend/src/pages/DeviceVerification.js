@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiShield, FiCheck, FiX, FiRefreshCw, FiUser, FiMail, FiCalendar } from 'react-icons/fi';
 import { toast } from 'react-toastify';
 import { deviceAPI } from '../services/api';
+import { formatDeviceIdShort } from '../utils/format';
 
 const DeviceVerification = () => {
   const [devices, setDevices] = useState([]);
@@ -240,8 +241,8 @@ const DeviceVerification = () => {
                           <span className="text-sm text-gray-500">{device.email}</span>
                         </div>
                         <div className="mt-2">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            Device ID: {device.deviceId}
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 font-mono" title={device.deviceId}>
+                            Device ID: {formatDeviceIdShort(device.deviceId)}
                           </span>
                         </div>
                         <div className="mt-2 text-xs text-gray-500">
