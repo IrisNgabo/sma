@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiUsers, FiShield, FiDollarSign, FiTrendingUp, FiClock, FiCheckCircle } from 'react-icons/fi';
 import { analyticsAPI, deviceAPI, customerAPI } from '../services/api';
+import { formatCurrency } from '../utils/format';
 
 const Dashboard = () => {
   const [analytics, setAnalytics] = useState(null);
@@ -66,7 +67,7 @@ const Dashboard = () => {
     },
     {
       name: 'Total Balance',
-      value: `$${customerStats?.totalBalance?.toLocaleString() || '0'}`,
+      value: formatCurrency(customerStats?.totalBalance),
       icon: FiDollarSign,
       color: 'bg-purple-500',
       change: '+15%',
@@ -87,11 +88,11 @@ const Dashboard = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg">
+            <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className={`p-3 rounded-md ${stat.color}`}>
+                    <div className={`p-3 rounded-md ${stat.color} group-hover:scale-110 transition-transform duration-300`}>
                       <Icon className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -125,7 +126,7 @@ const Dashboard = () => {
       {/* Charts and Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Transactions */}
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
               Recent Transactions
@@ -150,7 +151,7 @@ const Dashboard = () => {
                     <p className={`text-sm font-medium ${
                       transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount}
+                      {transaction.type === 'deposit' ? '+' : '-'}{formatCurrency(transaction.amount)}
                     </p>
                     <p className="text-xs text-gray-500">
                       {new Date(transaction.createdAt).toLocaleDateString()}
@@ -165,7 +166,7 @@ const Dashboard = () => {
         </div>
 
         {/* Top Customers */}
-        <div className="bg-white shadow rounded-lg">
+        <div className="bg-white shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
               Top Customers by Balance
@@ -186,9 +187,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">
-                      ${customer.balance?.toLocaleString() || '0'}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{formatCurrency(customer.balance)}</p>
                   </div>
                 </div>
               )) || (
@@ -200,28 +199,28 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="bg-white shadow rounded-lg hover:shadow-xl transition-shadow duration-300">
         <div className="px-4 py-5 sm:p-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
             Quick Actions
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-500 hover:shadow-md hover:-translate-y-1 transition-all duration-300 transform">
               <FiShield className="h-6 w-6 text-blue-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-900">Verify Devices</p>
               <p className="text-xs text-gray-500">Review pending verifications</p>
             </button>
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-500 hover:shadow-md hover:-translate-y-1 transition-all duration-300 transform">
               <FiUsers className="h-6 w-6 text-green-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-900">View Customers</p>
               <p className="text-xs text-gray-500">Manage customer accounts</p>
             </button>
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-500 hover:shadow-md hover:-translate-y-1 transition-all duration-300 transform">
               <FiTrendingUp className="h-6 w-6 text-purple-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-900">Analytics</p>
               <p className="text-xs text-gray-500">View detailed reports</p>
             </button>
-            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-500 hover:shadow-md hover:-translate-y-1 transition-all duration-300 transform">
               <FiDollarSign className="h-6 w-6 text-yellow-600 mx-auto mb-2" />
               <p className="text-sm font-medium text-gray-900">Transactions</p>
               <p className="text-xs text-gray-500">Monitor all transactions</p>
