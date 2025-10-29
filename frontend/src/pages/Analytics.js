@@ -1,15 +1,19 @@
+
 import React, { useState, useEffect } from 'react';
 import { FiBarChart3, FiTrendingUp, FiTrendingDown, FiUsers, FiDollarSign, FiCalendar } from 'react-icons/fi';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { analyticsAPI } from '../services/api';
+import { formatCurrency } from '../utils/format';
 
 const Analytics = () => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [period, setPeriod] = useState('month');
+  const [trends, setTrends] = useState([]);
 
   useEffect(() => {
     fetchAnalytics();
+    fetchTrends();
   }, [period]);
 
   const fetchAnalytics = async () => {
@@ -21,6 +25,40 @@ const Analytics = () => {
       console.error('Error fetching analytics:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTrends = async () => {
+    try {
+      const now = new Date();
+      // Last 7 days for daily trends
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6);
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      const response = await analyticsAPI.getTransactions({
+        startDate: start.toISOString().slice(0, 10),
+        endDate: end.toISOString().slice(0, 10)
+      });
+
+      const depositsMap = new Map(response.data.data.depositsByDay.map(d => [d.date, Number(d.total)]));
+      const withdrawalsMap = new Map(response.data.data.withdrawalsByDay.map(d => [d.date, Number(d.total)]));
+
+      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const data = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(end);
+        d.setDate(end.getDate() - i);
+        const key = d.toISOString().slice(0, 10);
+        data.push({
+          name: days[d.getDay()],
+          deposits: depositsMap.get(key) || 0,
+          withdrawals: withdrawalsMap.get(key) || 0
+        });
+      }
+      setTrends(data);
+    } catch (e) {
+      console.error('Error fetching trends:', e);
+      setTrends([]);
     }
   };
 
@@ -59,10 +97,10 @@ const Analytics = () => {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <FiDollarSign className="h-8 w-8 text-green-600" />
+              <FiDollarSign className="h-8 w-8 text-green-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -70,53 +108,49 @@ const Analytics = () => {
                   Total Deposits
                 </dt>
                 <dd className="text-lg font-medium text-gray-900">
-                  ${analytics?.totalDeposits?.toLocaleString() || '0'}
+                  {formatCurrency(analytics?.totalDeposits)}
                 </dd>
               </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <FiTrendingDown className="h-8 w-8 text-red-600" />
+              <FiTrendingDown className="h-8 w-8 text-red-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
                 <dt className="text-sm font-medium text-gray-500 truncate">
                   Total Withdrawals
                 </dt>
-                <dd className="text-lg font-medium text-gray-900">
-                  ${analytics?.totalWithdrawals?.toLocaleString() || '0'}
-                </dd>
+                <dd className="text-lg font-medium text-gray-900">{formatCurrency(analytics?.totalWithdrawals)}</dd>
               </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <FiTrendingUp className="h-8 w-8 text-blue-600" />
+              <FiTrendingUp className="h-8 w-8 text-blue-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
                 <dt className="text-sm font-medium text-gray-500 truncate">
                   Net Balance
                 </dt>
-                <dd className="text-lg font-medium text-gray-900">
-                  ${analytics?.netBalance?.toLocaleString() || '0'}
-                </dd>
+                <dd className="text-lg font-medium text-gray-900">{formatCurrency(analytics?.netBalance)}</dd>
               </dl>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <FiUsers className="h-8 w-8 text-purple-600" />
+              <FiUsers className="h-8 w-8 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
             </div>
             <div className="ml-5 w-0 flex-1">
               <dl>
@@ -135,16 +169,11 @@ const Analytics = () => {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Transaction Trends */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Trends</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={[
-                { name: 'Week 1', deposits: 4000, withdrawals: 2400 },
-                { name: 'Week 2', deposits: 3000, withdrawals: 1398 },
-                { name: 'Week 3', deposits: 2000, withdrawals: 9800 },
-                { name: 'Week 4', deposits: 2780, withdrawals: 3908 },
-              ]}>
+              <LineChart data={trends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -157,7 +186,7 @@ const Analytics = () => {
         </div>
 
         {/* Customer Distribution */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Customer Distribution</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
@@ -192,7 +221,7 @@ const Analytics = () => {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Transactions */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Transactions</h3>
           <div className="space-y-3">
             {analytics?.recentTransactions?.slice(0, 5).map((transaction) => (
@@ -211,10 +240,8 @@ const Analytics = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-sm font-medium ${
-                    transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount}
+                  <p className={`text-sm font-medium ${transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'}`}>
+                    {transaction.type === 'deposit' ? '+' : '-'}{formatCurrency(transaction.amount)}
                   </p>
                   <p className="text-xs text-gray-500">
                     {new Date(transaction.createdAt).toLocaleDateString()}
@@ -228,7 +255,7 @@ const Analytics = () => {
         </div>
 
         {/* Top Customers */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Top Customers</h3>
           <div className="space-y-3">
             {analytics?.topCustomers?.slice(0, 5).map((customer, index) => (
@@ -246,9 +273,7 @@ const Analytics = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-medium text-gray-900">
-                    ${customer.balance?.toLocaleString() || '0'}
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">{formatCurrency(customer.balance)}</p>
                 </div>
               </div>
             )) || (
@@ -259,7 +284,7 @@ const Analytics = () => {
       </div>
 
       {/* Performance Metrics */}
-      <div className="bg-white p-6 rounded-lg shadow">
+      <div className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Performance Metrics</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
@@ -269,9 +294,7 @@ const Analytics = () => {
             <div className="text-sm text-gray-500">Total Transactions</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900">
-              ${analytics?.averageTransactionAmount?.toFixed(2) || '0.00'}
-            </div>
+            <div className="text-2xl font-bold text-gray-900">{formatCurrency(analytics?.averageTransactionAmount)}</div>
             <div className="text-sm text-gray-500">Average Transaction</div>
           </div>
           <div className="text-center">
