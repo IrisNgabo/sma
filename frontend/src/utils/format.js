@@ -10,9 +10,9 @@
  * @param {string} locale - Locale string (default: 'en-US')
  * @returns {string} Formatted currency string
  */
-export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
+export const formatCurrency = (amount, currency = 'RWF', locale = 'en-RW') => {
   if (amount === null || amount === undefined || isNaN(amount)) {
-    return '$0.00';
+    return 'RWF 0.00';
   }
   
   return new Intl.NumberFormat(locale, {
@@ -358,6 +358,19 @@ export const formatTransactionAmount = (amount, type) => {
   }
   
   return formattedAmount;
+};
+
+/**
+ * Format device ID to a short, readable form
+ * e.g., ab12cd...9f30
+ * @param {string} deviceId
+ * @param {number} startLen
+ * @param {number} endLen
+ * @returns {string}
+ */
+export const formatDeviceIdShort = (deviceId, startLen = 6, endLen = 4) => {
+  if (!deviceId || deviceId.length <= startLen + endLen + 3) return deviceId || '';
+  return `${deviceId.slice(0, startLen)}...${deviceId.slice(-endLen)}`;
 };
 
 /**
