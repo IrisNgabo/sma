@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../services/api';
+import { setToken, getToken, removeToken, isTokenExpired, getUserIdFromToken, getUserRoleFromToken } from '../utils';
 
 // Initial state
 const initialState = {
@@ -83,14 +84,16 @@ export const AuthProvider = ({ children }) => {
 
   // Check for existing token on app load
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
+    const token = getToken();
+    if (token && !isTokenExpired(token)) {
       // Set token in API headers
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       
       // Verify token with server
       verifyToken();
     } else {
+      // Token is expired or doesn't exist, clear it
+      if (token) removeToken();
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false });
     }
   }, []);
@@ -120,7 +123,7 @@ export const AuthProvider = ({ children }) => {
       const { data } = response.data;
       
       // Store token
-      localStorage.setItem('adminToken', data.token);
+      setToken(data.token);
       api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
       
       // Update state
@@ -150,7 +153,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       // Clear token and state
-      localStorage.removeItem('adminToken');
+      removeToken();
       delete api.defaults.headers.common['Authorization'];
       dispatch({ type: AUTH_ACTIONS.LOGOUT });
       toast.info('Logged out successfully');
