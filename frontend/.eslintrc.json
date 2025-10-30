@@ -1,0 +1,7 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    // You can still customize behavior if you want
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
