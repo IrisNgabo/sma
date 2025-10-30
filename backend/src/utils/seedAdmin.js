@@ -36,12 +36,12 @@ const seedAdmin = async () => {
       }
     });
 
-    console.log('✅ Admin user created successfully');
-    console.log(`📧 Email: ${admin.email}`);
-    console.log(`🔑 Password: ${process.env.ADMIN_PASSWORD || 'admin123'}`);
+    console.log(' Admin user created successfully');
+    console.log(` Email: ${admin.email}`);
+    console.log(` Password: ${process.env.ADMIN_PASSWORD || 'admin123'}`);
     
   } catch (error) {
-    console.error('❌ Error creating admin user:', error);
+    console.error(' Error creating admin user:', error);
   }
 };
 

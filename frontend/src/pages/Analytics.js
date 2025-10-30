@@ -5,6 +5,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { analyticsAPI } from '../services/api';
 import { formatCurrency } from '../utils/format';
 
+
+/**
+ * Analytics Dashboard
+ *
+ * Displays financial metrics, charts, and customer insights.
+ * Fetches data from the backend using `analyticsAPI` and updates
+ * dynamically based on selected time periods (day, week, month, year).
+ */
+
 const Analytics = () => {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
