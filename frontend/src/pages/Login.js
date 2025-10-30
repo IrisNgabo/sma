@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/AuthContext';
-import { FiEye, FiEyeOff, FiLock, FiMail, FiShield, FiTrendingUp, FiUsers, FiBarChart } from 'react-icons/fi';
+import { FiEye, FiEyeOff, FiLock, FiMail, FiShield, FiUsers, FiBarChart } from 'react-icons/fi';
 
 const Login = () => {
+  // Form state for email and password
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  // Toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
+  // Loading state when submitting login
   const [isLoading, setIsLoading] = useState(false);
   
   const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
+  // Redirect user to dashboard if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
     }
   }, [isAuthenticated, navigate]);
 
+  // Update form state on input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,6 +32,7 @@ const Login = () => {
     });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -35,7 +40,7 @@ const Login = () => {
     try {
       const result = await login(formData);
       if (result.success) {
-        navigate('/dashboard');
+        navigate('/dashboard'); // Redirect on successful login
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -44,6 +49,7 @@ const Login = () => {
     }
   };
 
+  // Show loading spinner while auth state is loading
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800">
@@ -54,19 +60,21 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Left Panel - Branding */}
+      {/* Left Panel - Branding and Features (visible on lg+) */}
       <div className="hidden lg:flex lg:flex-shrink-0 lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 p-12 flex items-center justify-center">
         <div className="max-w-md">
+          {/* Logo */}
           <div className="flex items-center mb-8">
             <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center shadow-xl">
               <FiShield className="h-8 w-8 text-blue-600" />
             </div>
             <div className="ml-4">
-              <h1 className="text-3xl font-bold text-white">Credit Jambo</h1>
+              <h1 className="text-3xl font-bold text-white">SMA</h1>
               <p className="text-blue-200 text-sm">Savings Management</p>
             </div>
           </div>
 
+          {/* Headline */}
           <div className="mb-12">
             <h2 className="text-5xl font-extrabold text-white mb-4 leading-tight">
               Savings<br />Management App
@@ -76,6 +84,7 @@ const Login = () => {
             </p>
           </div>
 
+          {/* Features */}
           <div className="space-y-4">
             <div className="flex items-center text-white">
               <div className="p-3 bg-white bg-opacity-20 rounded-lg mr-4">
@@ -113,6 +122,7 @@ const Login = () => {
       {/* Right Panel - Login Form */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
+          {/* Mobile Branding */}
           <div className="text-center mb-8 lg:hidden">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4">
               <FiShield className="h-8 w-8 text-white" />
@@ -121,21 +131,18 @@ const Login = () => {
             <p className="text-gray-500">Savings Management</p>
           </div>
 
+          {/* Login Form Container */}
           <div className="bg-white rounded-2xl shadow-2xl p-8">
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Welcome Back
-              </h2>
-              <p className="text-gray-600">
-                Sign in to your admin account to continue
-              </p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+              <p className="text-gray-600">Sign in to your admin account to continue</p>
             </div>
 
+            {/* Login Form */}
             <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email address
-                </label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email address</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <FiMail className="h-5 w-5 text-gray-400" />
@@ -154,10 +161,9 @@ const Login = () => {
                 </div>
               </div>
 
+              {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <FiLock className="h-5 w-5 text-gray-400" />
@@ -173,6 +179,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                   />
+                  {/* Show/Hide Password Toggle */}
                   <button
                     type="button"
                     className="absolute inset-y-0 right-0 pr-4 flex items-center"
@@ -187,6 +194,7 @@ const Login = () => {
                 </div>
               </div>
 
+              {/* Submit Button */}
               <div>
                 <button
                   type="submit"
@@ -204,6 +212,7 @@ const Login = () => {
                 </button>
               </div>
 
+              {/* Default Credentials Info */}
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-xs text-center text-gray-500">
                   Default credentials: admin@creditjambo.com / admin123

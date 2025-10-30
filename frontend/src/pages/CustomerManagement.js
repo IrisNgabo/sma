@@ -1,9 +1,12 @@
+// eslint-disable-next-line react-hooks/exhaustive-deps
+
 import React, { useState, useEffect } from 'react';
 import { FiUsers, FiSearch, FiFilter, FiEye, FiDollarSign, FiShield, FiShieldOff, FiX } from 'react-icons/fi';
 import { customerAPI } from '../services/api';
-import { formatCurrency } from '../utils/format';
+import { formatCurrency, formatDeviceIdShort } from '../utils/format';
 
 const CustomerManagement = () => {
+  // State for storing customer list, loading state, search, filter, stats, and selected customer details
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,11 +15,13 @@ const CustomerManagement = () => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showCustomerDetails, setShowCustomerDetails] = useState(false);
 
+  // Initial fetch for customers and stats
   useEffect(() => {
     fetchCustomers();
     fetchStats();
   }, []);
 
+   // Fetch customer list with optional search and verification filter
   const fetchCustomers = async () => {
     try {
       setLoading(true);
@@ -32,7 +37,7 @@ const CustomerManagement = () => {
       setLoading(false);
     }
   };
-
+ // Fetch overall customer statistics
   const fetchStats = async () => {
     try {
       const response = await customerAPI.getStats();
@@ -42,16 +47,19 @@ const CustomerManagement = () => {
     }
   };
 
+    // Handle search form submission
   const handleSearch = (e) => {
     e.preventDefault();
     fetchCustomers();
   };
-
+// Handle filter change and refetch customers
   const handleFilterChange = (value) => {
     setFilterVerified(value);
     fetchCustomers();
   };
 
+  
+  // Fetch and display single customer details
   const handleViewCustomer = async (customerId) => {
     try {
       const response = await customerAPI.getCustomer(customerId);
@@ -285,7 +293,7 @@ const CustomerManagement = () => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Device ID</label>
-                  <p className="mt-1 text-sm text-gray-900 font-mono">{selectedCustomer.deviceId}</p>
+                  <p className="mt-1 text-sm text-gray-900 font-mono">{formatDeviceIdShort(selectedCustomer.deviceId)}</p>
                 </div>
                 
                 <div>
