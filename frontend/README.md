@@ -1,6 +1,6 @@
-# Credit Jambo Admin Frontend
+#  Admin Frontend
 
-React-based admin dashboard for the Credit Jambo Management System.
+React-based admin dashboard for the Savings Management System.
 
 ## Features
 

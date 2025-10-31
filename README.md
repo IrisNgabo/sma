@@ -1,12 +1,12 @@
-# Credit Jambo Admin Management System
+#  Admin Management System
 
-A comprehensive admin management system for the Credit Jambo savings platform, built with modern web technologies.
+A comprehensive admin management system for the savings management platform, built with modern web technologies.
 
-## 🚀 Overview
+##  Overview
 
-This is the **Admin/Management Application** for the Credit Jambo savings system. It provides administrators with powerful tools to manage customers, verify devices, monitor transactions, and analyze platform performance.
+This is the **Admin/Management Application** for the  savings system. It provides administrators with powerful tools to manage customers, verify devices, monitor transactions, and analyze platform performance.
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 credit-jambo-admin/
@@ -16,7 +16,7 @@ credit-jambo-admin/
 └── README.md         # This file
 ```
 
-## ✨ Features
+##  Features
 
 ###  Admin Authentication
 - Secure JWT-based authentication
@@ -107,7 +107,7 @@ npm start
 - **Email**: admin@creditjambo.com
 - **Password**: admin123
 
-## 📋 API Endpoints
+##  API Endpoints
 
 ### Authentication
 - `POST /api/admin/login` - Admin login
@@ -164,7 +164,7 @@ npm start
 - `permissions` (JSON)
 - `isActive` (Boolean)
 
-## 🔧 Configuration
+## Configuration
 
 ### Backend Environment Variables
 ```env
@@ -193,7 +193,7 @@ REACT_APP_API_URL=http://localhost:4001/api
 REACT_APP_ENV=development
 ```
 
-## 🧪 Testing
+##  Testing
 
 ### Backend Tests
 ```bash
@@ -207,7 +207,7 @@ cd frontend
 npm test
 ```
 
-## 📦 Deployment
+##  Deployment
 
 ### Docker Deployment
 ```bash
@@ -228,7 +228,7 @@ npm run build
 # Serve the build folder with a web server
 ```
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -236,15 +236,15 @@ npm run build
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## Support
 
 For support, email support@creditjambo.com or create an issue in the repository.
 
-## 🎯 Roadmap
+##  Roadmap
 
 - [ ] Real-time notifications
 - [ ] Advanced analytics
@@ -257,4 +257,4 @@ For support, email support@creditjambo.com or create an issue in the repository.
 
 ---
 
-**Built with ❤️ for Credit Jambo**
+**Built with ❤️ by Iris NGABO**

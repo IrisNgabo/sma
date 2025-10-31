@@ -1,6 +1,6 @@
-# Credit Jambo Admin Backend
+#  Admin Backend
 
-Backend API for the Credit Jambo Admin Management System built with Node.js, Express.js, and PostgreSQL.
+Backend API for the  Admin Management System built with Node.js, Express.js, and PostgreSQL.
 
 ## Features
 
