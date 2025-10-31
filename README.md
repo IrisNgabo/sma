@@ -132,7 +132,7 @@ npm start
 - `GET /api/analytics/transactions` - Get transaction analytics
 - `GET /api/analytics/customers` - Get customer analytics
 
-## 🗄️ Database Schema
+##  Database Schema
 
 ### Users Table
 - `id` (UUID, Primary Key)
@@ -228,33 +228,5 @@ npm run build
 # Serve the build folder with a web server
 ```
 
-##  Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-##  License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-For support, email support@creditjambo.com or create an issue in the repository.
-
-##  Roadmap
-
-- [ ] Real-time notifications
-- [ ] Advanced analytics
-- [ ] Mobile app integration
-- [ ] Multi-language support
-- [ ] Advanced reporting
-- [ ] API rate limiting dashboard
-- [ ] Audit logs
-- [ ] Backup and recovery tools
-
----
 
 **Built with ❤️ by Iris NGABO**
