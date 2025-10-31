@@ -12,7 +12,7 @@ const seedAdmin = async () => {
     });
 
     if (existingAdmin) {
-      console.log('✅ Admin user already exists');
+      console.log(' Admin user already exists');
       return;
     }
 

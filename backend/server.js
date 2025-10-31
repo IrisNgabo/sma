@@ -71,7 +71,7 @@ sequelize.authenticate()
     
     // Sync database models without dropping data
     await sequelize.sync();
-    console.log('✅ Database models synchronized (no destructive changes)');
+    console.log(' Database models synchronized (no destructive changes)');
     
     // Seed initial admin user
     const seedAdmin = require('./src/utils/seedAdmin');
