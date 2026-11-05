@@ -159,6 +159,3 @@ docker-compose.override.yml
 yarn.lock
 pnpm-lock.yaml
 config.bat
-temp_auto_push.bat
-temp_interactive_push.bat
-branch_structure.json
